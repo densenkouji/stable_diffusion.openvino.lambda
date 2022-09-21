@@ -5,6 +5,11 @@ Implementation of Text-To-Image generation using Stable Diffusion on AWS Lambda(
   <img src="data/title.png"/>
 </p>
 
+```
+This project is based on the "stable_diffusion.openvino" project and ported to AWS Lambda.
+https://github.com/bes-dev/stable_diffusion.openvino
+```
+
 ## Requirements
 
 * AWS Lambda(x86_64)
@@ -87,7 +92,7 @@ optional arguments:
   ```
 
 ## Acknowledgements
-
+* stable_diffusion.openvino: https://github.com/bes-dev/stable_diffusion.openvino
 * Original implementation of Stable Diffusion: https://github.com/CompVis/stable-diffusion
 * diffusers library: https://github.com/huggingface/diffusers
 
