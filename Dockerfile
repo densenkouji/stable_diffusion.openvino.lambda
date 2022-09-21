@@ -32,9 +32,9 @@ COPY --from=builder \
     /var/task/clip-vit-large-patch14/special_tokens_map.json \
     /var/task/clip-vit-large-patch14/tokenizer.json /var/task/tokenizer/
 
-COPY --from=builder /opt/intel/openvino_2022.1.0.643/runtime/lib/intel64/* /var/task/
-COPY --from=builder /opt/intel/openvino_2022.1.0.643/runtime/3rdparty/tbb/lib/* /var/task/
-COPY --from=builder /opt/intel/openvino_2022.1.0.643/python/python3.9/ /var/task/python3.9/
+COPY --from=builder /opt/intel/openvino_2022/runtime/lib/intel64/* /var/task/
+COPY --from=builder /opt/intel/openvino_2022/runtime/3rdparty/tbb/lib/* /var/task/
+COPY --from=builder /opt/intel/openvino_2022/python/python3.9/ /var/task/python3.9/
 COPY --from=builder /var/task/lib/libm.so.6 /lib64/
 
 COPY app.py ./

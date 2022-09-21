@@ -51,6 +51,7 @@ def download_file_s3(file_from, save_to):
         return False
 
 def handler(event, context):
+    gc.collect()
     if event.setdefault('seed', DEFAULT_SEED) is not None:
         np.random.seed(event['seed'])
     if event.setdefault('init_image', DEFAULT_INIT_IMAGE) is None:

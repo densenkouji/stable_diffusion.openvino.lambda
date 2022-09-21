@@ -1,0 +1,12 @@
+#!/bin/sh
+LAMBDANAME=BEFORELAMBDANAME
+ROLENAME=BEFOREROLENAME
+REPOSITORYNAME=BEFOREREPOSITORYNAME
+BUCKETNAME=BEFOREBUCKETNAME
+
+aws s3 rb s3://$BUCKETNAME --force
+aws ecr delete-repository --output text --repository-name ${REPOSITORYNAME} --force
+aws lambda delete-function --output text --function-name ${LAMBDANAME}
+aws iam detach-role-policy --role-name ${ROLENAME} --policy-arn arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+aws iam detach-role-policy --role-name ${ROLENAME} --policy-arn arn:aws:iam::aws:policy/AmazonS3FullAccess
+aws iam delete-role --role-name ${ROLENAME}

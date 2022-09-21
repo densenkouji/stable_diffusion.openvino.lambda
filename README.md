@@ -5,36 +5,67 @@ Implementation of Text-To-Image generation using Stable Diffusion on AWS Lambda(
   <img src="data/title.png"/>
 </p>
 
-## News
-This Project is 
-When we started this project, it was just a tiny proof of concept that you can work with state-of-the-art image generators even without access to expensive hardware.
-But, due we get a lot of feedback from you, we decided to make this project something more than a tiny script.
-Currently, we work on the new version of our project, so we can respond to your issues and pool requests with delay.
-
-
 ## Requirements
 
 * AWS Lambda(x86_64)
 * Python 3.9
-* CPU compatible with OpenVINO.
 
-## Install requirements
-### Installing AWS CLI
+## Installation Instructions
+### 1. Installing AWS CLI & Docker
+Install AWS CLI and Docker.
+- AWS CLI
 https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html
 
+- Docker
+https://docs.docker.com/engine/install/
+
+### 2. Config AWS CLI
+Input AWS Access Key ID, AWS Secret Access Key, Default region name
 ```bash
-aws configure
+$ aws configure
+AWS Access Key ID [None]: YOUR ACCESSKEY
+AWS Secret Access Key [None]: YOUR SECRETKEY
+Default region name [None]: YOUR REGION (ex.us-east-1)
+Default output format [None]:
 ```
-### AWS Lmbda ENV
-- YOUR-FUNCTIO-NNAME: Your AWS Lambda Function Name
-- YOUR-BUCKET-NAME: Your AWS S3 Bucket
+
+### 3. Clone Project
 ```bash
-aws lambda update-function-configuration --function-name YOUR-FUNCTIO-NNAME --environment "Variables={BUCKET=YOUR-BUCKET-NAME}"
+$ git clone https://github.com/densenkouji/stable_diffusion.openvino.lambda.git
+$ cd stable_diffusion.openvino.lambda
+```
+
+### 4. Install
+```bash:
+$ sh ./install.sh
+(Create New) Input AWS Lambda Function Name [ex.mySdFunction]: YOUR LAMBDA FUNCTION NAME
+```
+Results
+```bash
+TRACINGCONFIG   PassThrough
+******* Complete!! *******
+The following resources were created.
+- Lmabda function: mySdFunction-yty7mdazmzzlywey
+- Role: mySdFunction-yty7mdazmzzlywey-role
+- ECR Repository: mysdfunction-yty7mdazmzzlywey-repo
+- S3 Bucket: mysdfunction-yty7mdazmzzlywey-bucket
+```
+
+### 5. Test(Text-To-Image)
+
+```bash
+$ aws lambda invoke \
+   --function-name mySdFunction-yty7mdazmzzlywey \
+   --invocation-type 'RequestResponse' \
+   --payload '{"prompt":"Street-art painting of Tower in style of Banksy"}' \
+   --cli-read-timeout 600 \
+   --cli-binary-format raw-in-base64-out \
+   output.text
 ```
 
 ## Generate image from text description
 
-```bash
+```JSON
 usage: 
 {
   "prompt": "Street-art painting of Emilia Clarke in style of Banksy, photorealism"
@@ -52,47 +83,8 @@ optional arguments:
   init-image INIT_IMAGE path to initial image
   strength STRENGTH   how strong the initial image should be noised [0.0, 1.0]
   mask MASK           mask of the region to inpaint on the initial image
-  output OUTPUT       output image name
+  output OUTPUT       prefix output image name
   ```
-
-## Examples
-
-### Example Text-To-Image
-```bash
-python demo.py --prompt "Street-art painting of Emilia Clarke in style of Banksy, photorealism"
-```
-
-### Example Image-To-Image
-```bash
-python demo.py --prompt "Photo of Emilia Clarke with a bright red hair" --init-image ./data/input.png --strength 0.5
-```
-
-### Example Inpainting
-```bash
-python demo.py --prompt "Photo of Emilia Clarke with a bright red hair" --init-image ./data/input.png --mask ./data/mask.png --strength 0.5
-```
-
-### Example web demo
-<p align="center">
-  <img src="data/demo_web.png"/>
-</p>
-
-[Example video on YouTube](https://youtu.be/wkbrRr6PPcY)
-
-```bash
-streamlit run demo_web.py
-```
-
-## Performance
-
-| CPU                                                   | Time per iter | Total time |
-|-------------------------------------------------------|---------------|------------|
-| AMD Ryzen Threadripper 1900X                          | 5.34 s/it     | 2.58 min   |
-| Intel(R) Core(TM) i7-4790K  @ 4.00GHz                 | 10.1 s/it     | 5.39 min   |
-| Intel(R) Core(TM) i5-8279U                            | 7.4 s/it      | 3.59 min   |
-| Intel(R) Core(TM) i7-1165G7 @ 2.80GHz                 | 7.4 s/it      | 3.59 min   |
-| Intel(R) Core(TM) i7-11800H @ 2.30GHz (16 threads)    | 2.9 s/it      | 1.54 min   |
-| Intel(R) Xeon(R) Gold 6154 CPU @ 3.00GHz              | 1 s/it        | 33 s       |
 
 ## Acknowledgements
 
