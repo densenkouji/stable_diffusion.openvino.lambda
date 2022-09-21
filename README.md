@@ -65,10 +65,10 @@ $ aws lambda invoke \
 
 ## Generate image from text description
 
-```JSON
+```bash
 usage: 
 {
-  "prompt": "Street-art painting of Emilia Clarke in style of Banksy, photorealism"
+  "prompt": "Street-art painting of Tower in style of Banksy"
 }
 
 optional arguments:
