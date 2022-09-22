@@ -52,8 +52,12 @@ def download_file_s3(file_from, save_to):
 
 def handler(event, context):
     gc.collect()
-    if event.setdefault('seed', DEFAULT_SEED) is not None:
-        np.random.seed(event['seed'])
+    seed = event.setdefault('seed', DEFAULT_SEED)
+    if seed is None:
+        import random
+        seed = random.randint(0,4294967295)
+    np.random.seed(seed)
+
     if event.setdefault('init_image', DEFAULT_INIT_IMAGE) is None:
         scheduler = LMSDiscreteScheduler(
             beta_start=event.setdefault('beta_start', DEFAULT_BETA_START),
@@ -88,7 +92,7 @@ def handler(event, context):
     )
     del engine
 
-    output_img = event.setdefault('output', 'sd') + '_' + datetime.now().strftime('%Y-%m-%d-%H-%M-%S') + '.png'
+    output_img = event.setdefault('output', 'sd') + '_' + str(seed) + '_' + datetime.now().strftime('%Y-%m-%d-%H-%M-%S') + '.png'
     cv2.imwrite('/tmp/' + output_img , image)
 
     bucket = s3_resource.Bucket(BUCKET_NAME)

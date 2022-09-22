@@ -32,6 +32,7 @@ aws iam attach-role-policy --role-name ${ROLENAME} --policy-arn arn:aws:iam::aws
 echo "(3/6) Build Container"
 aws ecr get-login-password --region ${REGION} | docker login --username AWS --password-stdin ${ACCOUNTID}.dkr.ecr.${REGION}.amazonaws.com
 docker build --no-cache -t ${REPOSITORYNAME} .
+# docker build --no-cache -t ${REPOSITORYNAME} -f ./Dockerfile.waifu .
 docker tag ${REPOSITORYNAME}:latest ${ACCOUNTID}.dkr.ecr.${REGION}.amazonaws.com/${REPOSITORYNAME}:latest
 
 echo "(4/6) Push Container"
