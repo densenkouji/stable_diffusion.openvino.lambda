@@ -134,3 +134,4 @@ glibc-2.27/
 stable-diffusion-v1-4-openvino/
 clip-vit-large-patch14/
 push.sh
+uninstall-*.sh

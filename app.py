@@ -99,4 +99,4 @@ def handler(event, context):
     bucket.upload_file('/tmp/' + output_img, output_img)
     gc.collect()
 
-    return  {"statusCode": 200, "body": {"output": output_img}}
+    return  {"statusCode": 200, "body": {"bucket":BUCKET_NAME, "output": output_img, "seed":seed, "prompt": event.setdefault('prompt', DEFAULT_PROMPT) }}

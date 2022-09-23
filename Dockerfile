@@ -7,8 +7,7 @@ RUN yum install -y git-lfs && git lfs install && git clone https://huggingface.c
 ENV GIT_LFS_SKIP_SMUDGE=1
 RUN git clone https://huggingface.co/openai/clip-vit-large-patch14
 WORKDIR /opt/glibc-2.27/build
-RUN /opt/glibc-2.27/configure --prefix=/var/task
-RUN make && make install
+RUN /opt/glibc-2.27/configure --prefix=/var/task && make && make install
 
 FROM public.ecr.aws/lambda/python:3.9 as production
 COPY requirements.txt  ./
