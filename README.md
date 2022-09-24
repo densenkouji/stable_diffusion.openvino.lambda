@@ -77,19 +77,34 @@ usage:
 }
 
 optional arguments:
-  seed SEED           random seed for generating consistent images per prompt
-  beta-start BETA_START LMSDiscreteScheduler::beta_start
-  beta-end BETA_END     LMSDiscreteScheduler::beta_end
-  beta-schedule BETA_SCHEDULE LMSDiscreteScheduler::beta_schedule
-  num-inference-steps NUM_INFERENCE_STEPS num inference steps
-  guidance-scale GUIDANCE_SCALE guidance scale
-  eta ETA eta
-  prompt PROMPT prompt
-  init-image INIT_IMAGE path to initial image
-  strength STRENGTH   how strong the initial image should be noised [0.0, 1.0]
-  mask MASK           mask of the region to inpaint on the initial image
-  output OUTPUT       prefix output image name
-  ```
+  lambda              lambda function name
+  seed                random seed for generating consistent images per prompt
+  beta_start          LMSDiscreteScheduler::beta_start
+  beta_end            LMSDiscreteScheduler::beta_end
+  beta_schedule       LMSDiscreteScheduler::beta_schedule
+  num_inference_steps num inference steps
+  guidance_scale      guidance scale
+  eta                 eta
+  prompt              prompt
+  init_image          filename to initial image (S3)
+  strength            how strong the initial image should be noised [0.0, 1.0]
+  mask                mask of the region to inpaint on the initial image
+  output              prefix output image name
+  n                   Loop count
+  limit               Loop limit
+```
+
+## Examples
+
+### Example Text-To-Image
+```bash
+python demo.py --lambda myFunc1-emrzmjvlngu9mwiw --n 5 --prompt "Street-art painting of Sakura with tower in style of Banksy"
+```
+
+### Example Image-To-Image
+```bash
+python demo.py --lambda myFunc1-emrzmjvlngu9mwiw --prompt "Street-art painting of Sakura with tower in style of Banksy" --init_image input.png --strength 0.5
+```
 
 ## Acknowledgements
 * stable_diffusion.openvino: https://github.com/bes-dev/stable_diffusion.openvino
