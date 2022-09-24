@@ -1,4 +1,5 @@
 # -- coding: utf-8 --`
+import os
 import argparse
 import json
 import botocore
@@ -14,6 +15,9 @@ def main(args):
         results = {}
 
         for num in range(args['n']):
+            if num == args['limit']:
+                break
+
             response = lambda_client.invoke(
                 FunctionName=args['lambda'],
                 InvocationType='RequestResponse',
@@ -23,7 +27,11 @@ def main(args):
             json_dict = json.loads(response['Payload'].read().decode('utf-8'))
 
             if json_dict['statusCode'] == 200:
-                s3_resource.Bucket(json_dict['body']['bucket']).download_file(json_dict['body']['output'], json_dict['body']['output'])
+                if 'bucket' in json_dict['body']:
+                    s3_resource.Bucket(
+                        json_dict['body']['bucket']).download_file(json_dict['body']['output'],
+                        os.path.join(args['save'], json_dict['body']['output'])
+                        )
             else:
                 break
             results[num] = json_dict
@@ -40,17 +48,17 @@ if __name__ == "__main__":
     # randomizer params
     parser.add_argument("--seed", type=int, default=None, help="random seed for generating consistent images per prompt")
     # scheduler params
-    parser.add_argument("--beta-start", type=float, default=None, help="LMSDiscreteScheduler::beta_start")
-    parser.add_argument("--beta-end", type=float, default=None, help="LMSDiscreteScheduler::beta_end")
-    parser.add_argument("--beta-schedule", type=str, default=None, help="LMSDiscreteScheduler::beta_schedule")
+    parser.add_argument("--beta_start", type=float, default=None, help="LMSDiscreteScheduler::beta_start")
+    parser.add_argument("--beta_end", type=float, default=None, help="LMSDiscreteScheduler::beta_end")
+    parser.add_argument("--beta_schedule", type=str, default=None, help="LMSDiscreteScheduler::beta_schedule")
     # diffusion params
-    parser.add_argument("--num-inference-steps", type=int, default=None, help="num inference steps")
-    parser.add_argument("--guidance-scale", type=float, default=None, help="guidance scale")
+    parser.add_argument("--num_inference_steps", type=int, default=None, help="num inference steps")
+    parser.add_argument("--guidance_scale", type=float, default=None, help="guidance scale")
     parser.add_argument("--eta", type=float, default=None, help="eta")
     # prompt
     parser.add_argument("--prompt", type=str, default="Street-art painting of Tower in style of Banksy, photorealism", help="prompt")
     # img2img params
-    parser.add_argument("--init-image", type=str, default=None, help="path to initial image")
+    parser.add_argument("--init_image", type=str, default=None, help="path to initial image")
     parser.add_argument("--strength", type=float, default=None, help="how strong the initial image should be noised [0.0, 1.0]")
     # inpainting
     parser.add_argument("--mask", type=str, default=None, help="mask of the region to inpaint on the initial image")
@@ -58,5 +66,9 @@ if __name__ == "__main__":
     parser.add_argument("--output", type=str, default=None, help="output image prefix")
     # loop
     parser.add_argument("--n", type=int, default=1, help="Loop Count")
- 
+    # loop Limit
+    parser.add_argument("--limit", type=int, default=100, help="Max Loop Count")
+     # dist dir
+    parser.add_argument("--save", type=str, default="./", help="save dir")
+
     main(vars(parser.parse_args()))
